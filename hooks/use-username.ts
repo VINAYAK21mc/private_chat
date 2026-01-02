@@ -1,0 +1,31 @@
+"use client"
+
+import { useState, useEffect} from "react";
+import { nanoid } from "nanoid";
+
+const ANIMALS = ["wolf", "hawk", "bear", "raccoon", "tiger", "shark"]
+
+const STORAGE_KEY = "private_chat_username"
+
+const generateUsername = () => {
+    const word = ANIMALS[Math.floor(Math.random() * ANIMALS.length)]
+    return `anonymous-${word}-${nanoid(5)}`
+}
+export const useUsername = () => {
+    const [username, setUsername] = useState("");
+    useEffect(() => {
+        const main = () => {
+            const stored = localStorage.getItem(STORAGE_KEY)
+            if (stored) {
+                setUsername(stored)
+                return
+            }
+            const generated = generateUsername()
+            localStorage.setItem(STORAGE_KEY, generated)
+            setUsername(generated)
+        }
+        main()
+    }, [])
+
+    return {username};
+}
